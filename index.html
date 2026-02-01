@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Valentine's Surprise</title>
+
+<style>
+    #leftImage, #rightImage {
+  position: fixed;       /* stay fixed on the screen */
+  top: 50%;              /* center vertically */
+  transform: translateY(-50%);
+  width: 35%;            /* big size */
+  max-width: 400px;
+  z-index: 1000;         /* above everything */
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+#leftImage {
+  left: -5%;             /* far left */
+}
+
+#rightImage {
+  right: -5%;            /* far right */
+}
+    h1 {
+  font-family: 'Georgia', serif;
+}
+.letter {
+  position: relative;
+  min-height: 320px;
+  padding: 40px 30px;
+  border-radius: 20px;
+  background: #fffafc;
+}
+
+
+.card::before {
+  content: "💖";
+  font-size: 40px;
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+    * {
+  cursor: url("flower.png") 16 16, auto;
+}
+.card {
+  background: white;
+  padding: 50px 40px;
+  border-radius: 25px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+  max-width: 420px;
+  width: 90%;
+  position: relative;
+}
+
+.buttons {
+  margin-top: 30px;
+  position: relative;
+  height: 120px;
+}
+
+    .heart {
+  position: fixed;
+  bottom: -20px;
+  font-size: 24px;
+  animation: floatUp linear forwards;
+  opacity: 0.8;
+  pointer-events: none;
+}
+
+@keyframes floatUp {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(-100vh);
+    opacity: 0;
+  }
+}
+
+  body {
+    font-family: 'Arial', sans-serif;
+    background: #ffe6e6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    text-align: center;
+  }
+
+  h1 {
+  font-size: 32px;
+  line-height: 1.4;
+  color: #ff0040;
+  margin-bottom: 60px;
+}
+
+ button {
+  padding: 15px 40px;
+  font-size: 20px;
+  border-radius: 10px;
+}
+
+  #yesBtn {
+    background-color: #ff6699;
+    color: white;
+  }
+
+  #noBtn {
+    background-color: #999;
+    color: white;
+    position: absolute;
+  }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="letter">
+  <h1 id="question">Ana, will you be my Valentine?</h1>
+
+  <div class="buttons">
+    <button id="yesBtn">Yes ❤️</button>
+    <button id="noBtn">No  🏃‍♀️</button>
+  </div>
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+function createHeart() {
+  const heart = document.createElement('div');
+  heart.classList.add('heart');
+  heart.innerText = '❤️';
+
+  heart.style.left = Math.random() * 100 + 'vw';
+  heart.style.animationDuration = (3 + Math.random() * 3) + 's';
+
+  document.body.appendChild(heart);
+
+  setTimeout(() => {
+    heart.remove();
+  }, 6000);
+}
+
+setInterval(createHeart, 400);
+
+const yesBtn = document.getElementById('yesBtn');
+const letterBox = document.querySelector('.letter');
+
+document.addEventListener('mousemove', (e) => {
+    const x = e.clientX;
+    const y = e.clientY;
+
+    const noRect = noBtn.getBoundingClientRect();
+    const offset = 50;
+
+    if(x > noRect.left - 50 && x < noRect.right + 50 &&
+       y > noRect.top - 50 && y < noRect.bottom + 50) {
+        const maxX = letterBox.clientWidth - noBtn.offsetWidth;
+        const maxY = letterBox.clientHeight - noBtn.offsetHeight;
+        noBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
+        noBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
+    }
+});
+
+yesBtn.addEventListener('click', () => {
+  confetti({
+    particleCount: 200,
+    spread: 100,
+    origin: { y: 0.6 }
+  });
+
+  document.getElementById('question').innerText =
+    "ჰე ჰე ჰე, მაინც ვერ გამექცევი!";
+
+  // Show the big images outside the card
+  document.getElementById('leftImage').style.display = 'block';
+  document.getElementById('rightImage').style.display = 'block';
+});
+
+</script>
+</div> <!-- end of .card -->
+
+<!-- Images appear here, outside the card -->
+<img id="leftImage" src="left.png.png" alt="Left" style="display: none;">
+<img id="rightImage" src="right.png.png" alt="Right" style="display: none;">
+
+</body>
+</html>
