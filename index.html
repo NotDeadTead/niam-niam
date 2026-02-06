@@ -41,12 +41,21 @@
 }
 .letter {
   position: relative;
-  min-height: 320px;
-  padding: 40px 30px;
+  min-height: 420px;   /* ⬅️ makes it longer */
+  padding: 40px 30px 80px; /* ⬅️ extra space at bottom */
   border-radius: 20px;
   background: #fffafc;
 }
-
+#loveText {
+  margin-top: 18px;
+  font-size: 26px;
+  font-family: 'Georgia', serif;
+  color: #ff0040;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+  pointer-events: none;
+}
 
 .card::before {
   content: "💖";
@@ -120,16 +129,44 @@
   border-radius: 10px;
 }
 
-  #yesBtn {
-    background-color: #ff6699;
-    color: white;
-  }
+ #yesBtn {
+  background-color: #ff6699;
+  color: white;
+  transition: transform 0.2s ease;
+  box-shadow: 0 0 0 rgba(255, 102, 153, 0);
+}
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
+}
+
+.card {
+  animation: float 4s ease-in-out infinite;
+}
+
 
   #noBtn {
-    background-color: #999;
-    color: white;
-    position: absolute;
+  background-color: #999;
+  color: white;
+  position: absolute;
+  transition: left 0.18s ease, top 0.18s ease;
+}
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
   }
+  50% {
+    transform: scale(1.08);
+  }
+  
+}
+
+#loveText.show {
+  opacity: 1;
+  transform: scale(1);
+  animation: pulse 1.2s infinite;
+}
+
 </style>
 </head>
 <body>
@@ -142,6 +179,8 @@
     <button id="yesBtn">Yes ❤️</button>
     <button id="noBtn">No  🏃‍♀️</button>
   </div>
+  <div id="loveText">I Love U &lt;3</div>
+
 </div>
 
 
@@ -167,6 +206,10 @@ function createHeart() {
 setInterval(createHeart, 400);
 
 const yesBtn = document.getElementById('yesBtn');
+const loveText = document.getElementById('loveText');
+let yesClicks = 0;
+let yesScale = 1;
+
 const letterBox = document.querySelector('.letter');
 
 document.addEventListener('mousemove', (e) => {
@@ -182,23 +225,39 @@ document.addEventListener('mousemove', (e) => {
         const maxY = letterBox.clientHeight - noBtn.offsetHeight;
         noBtn.style.left = Math.floor(Math.random() * maxX) + 'px';
         noBtn.style.top = Math.floor(Math.random() * maxY) + 'px';
+        noBtn.style.transform =`rotate(${Math.random() * 20 - 10}deg)`;
+        yesScale += 0.001;              // how much YES grows each time
+yesScale = Math.min(yesScale, 2); // max size (important!)
+
+yesBtn.style.transform = `scale(${yesScale})`;
+yesBtn.style.boxShadow = `0 0 ${10 + yesScale * 10}px rgba(255, 102, 153, 0.6)`;
+
+
     }
 });
 
 yesBtn.addEventListener('click', () => {
+  yesClicks++;
+
   confetti({
     particleCount: 200,
     spread: 100,
     origin: { y: 0.6 }
   });
 
-  document.getElementById('question').innerText =
-    "ჰე ჰე ჰე, მაინც ვერ გამექცევი!";
+  if (yesClicks === 1) {
+    document.getElementById('question').innerText =
+      "ჰე ჰე ჰე, მაინც ვერ გამექცევი!";
+    document.getElementById('leftImage').style.display = 'block';
+    document.getElementById('rightImage').style.display = 'block';
+  }
 
-  // Show the big images outside the card
-  document.getElementById('leftImage').style.display = 'block';
-  document.getElementById('rightImage').style.display = 'block';
+  if (yesClicks === 3) {
+  loveText.classList.add('show');
+}
+
 });
+
 
 </script>
 </div> <!-- end of .card -->
