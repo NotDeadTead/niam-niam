@@ -18,12 +18,24 @@
 }
 
 #leftImage {
-  left: -5%;             /* far left */
+  left: 50%;
+  transform: translate(-100%, -50%);
+  margin-left: -260px; /* distance from card */
 }
 
 #rightImage {
-  right: -5%;            /* far right */
+  left: 50%;
+  transform: translate(0, -50%);
+  margin-left: 260px; /* distance from card */
 }
+    @media (max-width: 900px) {
+  #leftImage,
+  #rightImage {
+    display: none;
+  }
+}
+
+
     h1 {
   font-family: 'Georgia', serif;
 }
@@ -197,3 +209,4 @@ yesBtn.addEventListener('click', () => {
 
 </body>
 </html>
+
